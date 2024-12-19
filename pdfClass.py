@@ -37,8 +37,8 @@ class RecipePDF:
         base64_image = self.json_data.get("image", None)
         if base64_image:
             image = self.decode_image(base64_image)
-            img_width = 100  # Adjust as needed
-            img_height = 100  # Adjust as needed
+            img_width = 150  # Adjust as needed
+            img_height = 150  # Adjust as needed
             c.drawImage(image, width - x_margin - img_width, height - y_margin - img_height, 
                         width=img_width, height=img_height)
 
