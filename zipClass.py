@@ -10,6 +10,14 @@ class ZipHandler:
         self.zip_file_path = zip_file_path
         self.extract_to_path = extract_to_path
 
+    def extract_croutonFiles(self):
+        all_contents = []
+        with zipfile.ZipFile(self.zip_file_path, 'r') as zip_ref:
+            for croutonFile in zip_ref.namelist():
+                with zip_ref.open(croutonFile) as crouton:
+                    all_contents.append(crouton.read().decode('utf-8')) # Decode bytes to string
+        return all_contents
+
     def extract_files(self):
         """
         Extract the ZIP file contents to the target folder.
@@ -44,7 +52,9 @@ if __name__ == "__main__":
     zip_file = "Crouton Recipes - 28 Nov 2024.zip"  # Replace with your ZIP file path
     handler = ZipHandler(zip_file)
 
-    # Extract files
+    inMemory = handler.extract_croutonFiles()
+
+    # Extract files on disk
     handler.extract_files()
 
     # Process files
