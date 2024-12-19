@@ -2,12 +2,6 @@ import os
 import json
 
 
-class ingredientHandler:
-    def __init__(self, name: str, quantity: int):
-        self.name = name
-        self.quantity = quantity
-
-
 class CroutonDecodeHandler:
     def __init__(self, croutonFile):
         """
@@ -21,7 +15,7 @@ class CroutonDecodeHandler:
         Also add the amount
         """
         suffix_map = {
-            "ITEM": "x",
+            "ITEM": "",
             "GRAMS": "gr",
             "MILLS": "ml",
         }
@@ -47,9 +41,7 @@ class CroutonDecodeHandler:
                 )
 
                 ingredients.append(
-                    ingredientHandler(
-                        name=ingredient["ingredient"]["name"], quantity=quantity
-                    )
+                    {"name": ingredient["ingredient"]["name"], "quantity": quantity}
                 )
         except KeyError as e:
             print(f"Missing key in ingredient data: {e}")
