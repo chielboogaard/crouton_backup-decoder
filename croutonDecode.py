@@ -14,10 +14,16 @@ class CroutonDecodeHandler:
         Convert the quantity name in the crouton format to a logical unit name
         Also add the amount
         """
+        if quantityType == "SECTION":
+            return "--section--"
         suffix_map = {
             "ITEM": "",
             "GRAMS": "gr",
             "MILLS": "ml",
+            "CUP": "cup",
+            "TABLESPOON": "tbsp",
+            "TEASPOON": "tsp",
+            "SECTION": ""
         }
         suffix = suffix_map.get(quantityType, "???")
         return f"{quantityAmount}{suffix}"
