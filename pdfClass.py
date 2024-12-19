@@ -5,7 +5,7 @@ from reportlab.lib import colors
 from reportlab.lib.utils import ImageReader
 from io import BytesIO
 
-class RecipePDF:
+class RecipePDFHandler:
     def __init__(self, json_data, output_file="recipe.pdf"):
         """
         Initialize the ZipHandler with the ZIP file path and target extraction folder.
@@ -117,5 +117,5 @@ if __name__ == "__main__":
             "Fry the pancetta in a pan until crispy.",
         ]
     }
-    recipe_pdf = RecipePDF(recipe_data, "spaghetti_carbonara_with_image.pdf")
+    recipe_pdf = RecipePDFHandler(recipe_data, "spaghetti_carbonara_with_image.pdf")
     recipe_pdf.generate_pdf()
