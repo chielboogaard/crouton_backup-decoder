@@ -7,12 +7,13 @@ from io import BytesIO
 
 
 class RecipePDFHandler:
-    def __init__(self, json_data, output_file="recipe.pdf"):
+    def __init__(self, json_data, output_path, output_file="recipe.pdf",):
         """
         Initialize the ZipHandler with the ZIP file path and target extraction folder.
         """
         self.json_data = json_data
         self.output_file = output_file
+        self.output_path = output_path
 
     def decode_image(self, base64_string):
         """
@@ -68,7 +69,7 @@ class RecipePDFHandler:
         """
         Generates the pdf with use of reportlab
         """
-        c = canvas.Canvas(self.output_file, pagesize=A4)
+        c = canvas.Canvas(f"{self.output_path}/{self.output_file}", pagesize=A4,)
         width, height = A4
 
         # Margins
@@ -94,15 +95,13 @@ class RecipePDFHandler:
         # Title
         y_position = height - y_margin
         c.setFont("Helvetica-Bold", 18)
-        c.drawString(
-            x_margin, y_position, self.json_data.get("title", "Untitled Recipe")
-        )
-        y_position -= line_height * 2
+        y_position = self.draw_wrapped_text(c, self.json_data.get("title", "Untitled Recipe"), x_margin, y_position, 18, max_width, y_margin)
+        y_position -= line_height * 1.3
 
         # serves
         c.setFont("Helvetica", 12)
         serves = self.json_data.get("serves", "Unknown serves")
-        c.drawString(x_margin, y_position, f"By: {serves}")
+        c.drawString(x_margin, y_position, f"Recipe serves : {serves}")
         y_position -= line_height * 2
 
         # Ingredients Header
