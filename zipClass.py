@@ -11,6 +11,10 @@ class ZipHandler:
         self.extract_to_path = extract_to_path
 
     def extract_croutonFiles(self):
+        """
+        Extract the ZIP file contents to a variable.
+        in memory version of extract_files
+        """
         all_contents = []
         with zipfile.ZipFile(self.zip_file_path, 'r') as zip_ref:
             for croutonFile in zip_ref.namelist():
