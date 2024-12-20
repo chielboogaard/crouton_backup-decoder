@@ -1,5 +1,5 @@
 from zipClass import ZipHandler
-from croutonDecode import CroutonDecodeHandler
+from croutonDecodeClass import CroutonDecodeHandler
 from pdfClass import RecipePDFHandler
 
 import json
