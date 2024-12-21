@@ -1,6 +1,6 @@
-from zipClass import ZipHandler
-from croutonDecodeClass import CroutonDecodeHandler
-from pdfClass import RecipePDFHandler
+from zip_class import ZipHandler
+from crouton_decode_class import CroutonDecodeHandler
+from pdf_class import RecipePDFHandler
 
 import json
 import os
