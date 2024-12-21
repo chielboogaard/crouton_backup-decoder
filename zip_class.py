@@ -53,7 +53,7 @@ class ZipHandler:
 
 # Example Usage
 if __name__ == "__main__":
-    zip_file = "Crouton Recipes - 28 Nov 2024.zip"  # Replace with your ZIP file path
+    zip_file = "Crouton Recipes - example.zip"  # Replace with your ZIP file path
     handler = ZipHandler(zip_file)
 
     inMemory = handler.extract_croutonFiles()
