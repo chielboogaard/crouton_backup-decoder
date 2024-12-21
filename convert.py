@@ -10,30 +10,27 @@ OUTPUTPATH = "output"
 
 
 def main():
-    zipClass = ZipHandler(zip_file_path=FILEPATH)
+    zip = ZipHandler(zip_file_path=FILEPATH)
 
-    croutons = zipClass.extract_croutonFiles()
+    croutons = zip.extract_croutonFiles()
 
     os.makedirs(OUTPUTPATH, exist_ok=True)
 
-    for crouton in croutons:
-        croutonClass = CroutonDecodeHandler(croutonFile=json.loads(crouton))
+    for recipe in croutons:
+        crouton = CroutonDecodeHandler(croutonFile=json.loads(recipe))
 
-        instructions = croutonClass.get_instructions()
-        ingredients = croutonClass.get_ingredients()
-        recipeInfo = croutonClass.get_recipeInfo()
+        recipeInfo = crouton.get_recipeInfo()
 
-        print(instructions)
-        recipe = {
+        recipeData = {
                 "title": recipeInfo.get("name"),
                 "serves": recipeInfo.get("serves"),
                 "image": recipeInfo.get("imagess", ""),
-                "ingredients": ingredients,
-                "instructions": instructions,
+                "ingredients": crouton.get_ingredients(),
+                "instructions": crouton.get_instructions(),
             }
         
-        pdfClass = RecipePDFHandler(recipe, OUTPUTPATH, f"{recipeInfo.get("name")}.pdf")
-        pdfClass.generate_pdf()
+        pdf = RecipePDFHandler(recipeData, OUTPUTPATH, f"{recipeInfo.get("name")}.pdf")
+        pdf.generate_pdf()
         
         # break
     return
