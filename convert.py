@@ -5,7 +5,7 @@ from pdf_class import RecipePDFHandler
 import json
 import os
 
-FILEPATH = "Crouton Recipes - 19 Dec 2024.zip"
+FILEPATH = "Crouton Recipes - example"
 OUTPUTPATH = "output"
 
 
