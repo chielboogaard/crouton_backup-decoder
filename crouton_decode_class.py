@@ -1,21 +1,22 @@
 import os
 import json
 
-
+# The code defines a class CroutonDecodeHandler that processes a JSON object 
+# representing a recipe, typically from a file format called "crouton." This 
+# class extracts relevant information, such as the recipe ingredients, instructions, 
+# and additional details like the recipe name, servings, and cooking time.
 class CroutonDecodeHandler:
+    # Initialize the ZipHandler with the ZIP file path and target extraction folder.
     def __init__(self, croutonFile):
-        """
-        Initialize the ZipHandler with the ZIP file path and target extraction folder.
-        """
         self.croutonFile = croutonFile
 
     def convert_quantity(self, quantityAmount: int, quantityType: str):
-        """
-        Convert the quantity name in the crouton format to a logical unit name
-        Also add the amount
-        """
+        # Convert the quantity name in the crouton format to a logical unit name
+        # Also add the amount
         if quantityType == "SECTION":
             return "--section--"
+        
+        # Get the suffix for the quantity type
         suffix_map = {
             "ITEM": "",
             "GRAMS": "gr",
@@ -26,54 +27,59 @@ class CroutonDecodeHandler:
             "SECTION": ""
         }
         suffix = suffix_map.get(quantityType, "???")
+        # Return the amount and their type
         return f"{quantityAmount}{suffix}"
 
+    # Process the json in the crouton file and format it to:
+    # [{"name": "Example ingredient", "quantity": "999"}]
     def get_ingredients(self):
-        """
-        Process the json in the crouton file and format it to:
-        [{"name": "Example ingredient", "quantity": "999"}]
-        """
         ingredients = []
         try:
             for ingredient in self.croutonFile.get("ingredients", []):
                 # get the quantity type name
                 quantity_data = ingredient.get("quantity", {})
+                # get the amount and quantity type
                 amount = quantity_data.get("amount", 1)
                 quantityType = quantity_data.get("quantityType", "ITEM")
 
+                # Convert the quantity to a logical unit
                 quantity = self.convert_quantity(
                     quantityAmount=amount,
                     quantityType=quantityType,
                 )
 
+                # Append the ingredient to the list
                 ingredients.append(
                     {"name": ingredient["ingredient"]["name"], "quantity": quantity}
                 )
+        # Catch the errors        
         except KeyError as e:
             print(f"Missing key in ingredient data: {e}")
         except Exception as e:
             print(f"An error occurred while processing ingredients: {e}")
+        
+        # Return the list of ingredients
         return ingredients
 
+    # Process the json in the crouton file to sort and get the instructions
     def get_instructions(self):
-        """
-        Process the json in the crouton file to sort and get the instructions
-        """
         instructions = []
+        # Get the instructions from the crouton file
         try:
             for instruction in self.croutonFile.get("steps", []):
+                # Append the instruction to the list
                 instructions.append(instruction.get("step", ""))
+        # Catch the errors
         except KeyError as e:
             print(f"Missing key in ingredient data: {e}")
         except Exception as e:
             print(f"An error occurred while processing ingredients: {e}")
+        # Return the list of instructions
         return instructions
 
+    # Get the info of the recipe:
+    # name, serves, duration of prep, cooking duration and images
     def get_recipeInfo(self):
-        """
-        Get the info of the recipe:
-        name, serves, duration of prep, cooking duration and images
-        """
         try:
             name = self.croutonFile.get("name", "unknown")
             serves = self.croutonFile.get("serves", "unknown")
@@ -84,6 +90,7 @@ class CroutonDecodeHandler:
             print(f"Missing key in ingredient data: {e}")
         except Exception as e:
             print(f"An error occurred while processing ingredients: {e}")
+        # Return the recipe info
         return {
             "name": name,
             "serves": serves,

@@ -7,27 +7,24 @@ from io import BytesIO
 
 
 class RecipePDFHandler:
-    def __init__(self, json_data, output_path, output_file="recipe.pdf",):
-        """
-        Initialize the ZipHandler with the ZIP file path and target extraction folder.
-        """
+    # JSON data contain the recipe information
+    # output_file is the name of the fi;e (default: recipe.pdf)
+    def __init__(self, json_data, output_file="recipe.pdf",):
+        # Initialize the ZipHandler with the ZIP file path and target extraction folder.
         self.json_data = json_data
         self.output_file = output_file
-        self.output_path = output_path
 
+
+    # Decodes a base64 string into an ImageReader object for use with ReportLab.
     def decode_image(self, base64_string):
-        """
-        Decodes a base64 string into an ImageReader object for use with ReportLab.
-        """
         image_data = base64.b64decode(base64_string)
+        # Used to convert raw image data into an ImageReader object that can be inserted to pdf
         image = ImageReader(BytesIO(image_data))
         return image
 
+    # Draws wrapped text at (x, y) with a specified font size, checking for overflow.
+    # If there is not enough space, it creates a new page and resets the y position.
     def draw_wrapped_text(self, c, text, x, y, font_size, max_width, max_y):
-        """
-        Draws wrapped text at (x, y) with a specified font size, checking for overflow.
-        If there is not enough space, it creates a new page and resets the y position.
-        """
         c.setFont("Helvetica", font_size)
         text_height = 14  # Assuming a line height of 14 for this example
 
@@ -38,10 +35,9 @@ class RecipePDFHandler:
             # Check if adding this word exceeds the width
             test_line = f"{current_line} {word}".strip()
             text_width = c.stringWidth(test_line, "Helvetica", font_size)
-
-            if (
-                text_width > max_width
-            ):  # If it exceeds the max width, draw the current line
+            
+            # If it exceeds the max width, draw the current line
+            if (text_width > max_width):  
                 # If the y position is too low, create a new page
                 if y < max_y:
                     c.showPage()
@@ -65,11 +61,9 @@ class RecipePDFHandler:
 
         return y - text_height  # Return the new y position
 
+    # Generates the pdf with use of reportlab
     def generate_pdf(self):
-        """
-        Generates the pdf with use of reportlab
-        """
-        c = canvas.Canvas(f"{self.output_path}/{self.output_file}", pagesize=A4,)
+        c = canvas.Canvas(f"{self.output_file}", pagesize=A4,)
         width, height = A4
 
         # Margins
@@ -141,13 +135,16 @@ class RecipePDFHandler:
 
 # Example Usage
 if __name__ == "__main__":
-    # Base64 image example (replace with your actual image in base64 format)
-    base64_image_example = """
-    iVBORw0KGgoAAAANSUhEUgAAAAUA
-    AAAFCAYAAACNbyblAAAAHElEQVQI12P4
-    //8/w38GIAXDIBKE0DHxgljNBAAO
-    9TXL0Y4OHwAAAABJRU5ErkJggg==
-    """
+    image_path = "Add Your image path here"
+
+    # creating a method to convert an image to base64
+    def encode_image(image_path):
+        with open(image_path, "rb") as image_file:
+            # Read the image file and encode to base64 format
+            encoded_image = base64.b64encode(image_file.read()).decode("utf-8")
+        return encoded_image
+    
+    base64_image_example = encode_image(image_path)
 
     recipe_data = {
         "title": "Spaghetti Carbonara",
@@ -162,5 +159,7 @@ if __name__ == "__main__":
             "Fry the pancetta in a pan until crispy.",
         ],
     }
-    recipe_pdf = RecipePDFHandler(recipe_data, "spaghetti_carbonara_with_image.pdf")
+    recipe_pdf = RecipePDFHandler(recipe_data)
     recipe_pdf.generate_pdf()
+
+    # Output: PDF saved as recipe.pdf in the root directory
